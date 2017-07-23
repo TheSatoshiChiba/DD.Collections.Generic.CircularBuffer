@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CircularBuffer", "CircularBuffer\CircularBuffer.csproj", "{D4399E4A-F806-4D77-9680-F68288BC777E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedCode", "SharedCode\SharedCode.shproj", "{6F39A5A4-2F07-4A9D-929E-FB4E78170D55}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedCode\SharedCode.projitems*{6f39a5a4-2f07-4a9d-929e-fb4e78170d55}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4399E4A-F806-4D77-9680-F68288BC777E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4399E4A-F806-4D77-9680-F68288BC777E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4399E4A-F806-4D77-9680-F68288BC777E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4399E4A-F806-4D77-9680-F68288BC777E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

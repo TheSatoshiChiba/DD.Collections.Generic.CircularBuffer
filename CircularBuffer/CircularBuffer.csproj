@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>CircularBuffer</AssemblyName>
+    <RootNamespace>DD.Collections.Generic</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\SharedCode\SharedCode.projitems" Label="Shared" />
+
+</Project>
