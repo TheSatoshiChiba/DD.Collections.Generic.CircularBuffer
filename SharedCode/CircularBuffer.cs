@@ -28,6 +28,8 @@ namespace DD.Collections.Generic {
     public sealed class CircularBuffer<TValue> : IReadOnlyCollection<TValue>, ICollection {
         private static readonly int DEFAULT_CAPACITY = 1023;
 
+        public int Capacity => buffer.Length - 1;
+
         public int Count => ( buffer.Length + head - tail ) % buffer.Length;
 
         public bool IsSynchronized => false;
