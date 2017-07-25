@@ -114,6 +114,7 @@ namespace DD.Collections.Generic {
         /// This method is an O(1) operation.
         /// </remarks>
         /// <returns>The object that is removed from the beginning of the buffer.</returns>
+        /// <exception cref="InvalidOperationException">The buffer is empty.</exception>
         public TValue Pop() {
             if ( tail == head ) {
                 throw new InvalidOperationException( "Buffer is empty." );
@@ -136,6 +137,9 @@ namespace DD.Collections.Generic {
         /// zero-based indexing.
         /// </param>
         /// <param name="offset">The zero-based index in array at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">The destination array is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The given offset is negative.</exception>
+        /// <exception cref="ArgumentException">There destination array is too small to hold a copy of all elements within the buffer.</exception>
         public void CopyTo( TValue[] destination, int offset ) {
             if ( destination == null ) {
                 throw new ArgumentNullException( nameof( destination ) );
@@ -200,6 +204,7 @@ namespace DD.Collections.Generic {
             /// <summary>
             /// Returns the element in the buffer at the current position of the enumerator.
             /// </summary>
+            /// <exception cref="InvalidOperationException">Enumeration has not started or has already finished.</exception>
             public TValue Current {
                 get {
                     if ( index < 0 ) {
@@ -240,6 +245,7 @@ namespace DD.Collections.Generic {
             /// True if the enumerator was successfully advanced to the next element.
             /// False if the enumerator has passed the end of the buffer.
             /// </returns>
+            /// <exception cref="InvalidOperationException">The buffer changed during enumeration.</exception>
             public bool MoveNext() {
                 if ( version != instance.version ) {
                     throw new InvalidOperationException( 
@@ -268,6 +274,7 @@ namespace DD.Collections.Generic {
             /// Sets the enumerator to its initial position, 
             /// which is before the first element in the buffer.
             /// </summary>
+            /// <exception cref="InvalidOperationException">The buffer changed during enumeration.</exception>
             public void Reset() {
                 if ( version != instance.version ) {
                     throw new InvalidOperationException(
