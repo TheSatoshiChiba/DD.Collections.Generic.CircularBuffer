@@ -116,7 +116,7 @@ namespace DD.Collections.Generic {
             public TValue Current {
                 get {
                     if ( index < 0 ) {
-                        if ( index < -1 ) {
+                        if ( index == -1 ) {
                             throw new InvalidOperationException(
                                 "Enumeration not started." );
                         }
