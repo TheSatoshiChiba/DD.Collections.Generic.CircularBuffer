@@ -6,8 +6,9 @@
     <SharedGUID>6f39a5a4-2f07-4a9d-929e-fb4e78170d55</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>SharedCode</Import_RootNamespace>
+    <Import_RootNamespace>DD.Collections.Generic</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CircularBuffer.cs" />
   </ItemGroup>
 </Project>
