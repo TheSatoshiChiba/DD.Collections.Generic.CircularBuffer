@@ -52,20 +52,36 @@ namespace DD.Collections.Generic.Tests {
             var buffer = new CircularBuffer<int>( 3 );
 
             buffer.Push( 1 );
+            Assert.That( buffer.Count, Is.EqualTo( 1 ) );
+
             buffer.Push( 2 );
+            Assert.That( buffer.Count, Is.EqualTo( 2 ) );
+
             buffer.Push( 3 );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
             Assert.That( buffer.Pop(), Is.EqualTo( 1 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 2 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 2 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 1 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 3 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 0 ) );
 
             buffer.Push( 4 );
+            Assert.That( buffer.Count, Is.EqualTo( 1 ) );
+
             buffer.Push( 5 );
+            Assert.That( buffer.Count, Is.EqualTo( 2 ) );
+
             buffer.Push( 6 );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
             Assert.That( buffer.Pop(), Is.EqualTo( 4 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 2 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 5 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 1 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 6 ) );
+            Assert.That( buffer.Count, Is.EqualTo( 0 ) );
 
             Assert.That(
                 () => buffer.Pop(),
@@ -84,6 +100,7 @@ namespace DD.Collections.Generic.Tests {
             buffer.Push( 5 );
             buffer.Push( 6 );
 
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 4 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 5 ) );
             Assert.That( buffer.Pop(), Is.EqualTo( 6 ) );
@@ -122,6 +139,7 @@ namespace DD.Collections.Generic.Tests {
 
             buffer.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[] { 1, 2, 3 } ) );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
             buffer.Pop();
             buffer.Pop();
@@ -133,6 +151,7 @@ namespace DD.Collections.Generic.Tests {
 
             buffer.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[] { 4, 5, 6 } ) );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
         }
 
         [Test]
@@ -193,6 +212,7 @@ namespace DD.Collections.Generic.Tests {
                     enumerator.Reset();
                 }
             }
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
         }
 
         [Test]
@@ -202,10 +222,15 @@ namespace DD.Collections.Generic.Tests {
             buffer.Push( 1 );
             buffer.Push( 2 );
             buffer.Push( 3 );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
+
             buffer.Pop();
             buffer.Pop();
+            Assert.That( buffer.Count, Is.EqualTo( 1 ) );
+
             buffer.Push( 4 );
             buffer.Push( 5 );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
             using ( var enumerator = buffer.GetEnumerator() ) {
                 for ( int i = 0; i < 2; i += 1 ) {
