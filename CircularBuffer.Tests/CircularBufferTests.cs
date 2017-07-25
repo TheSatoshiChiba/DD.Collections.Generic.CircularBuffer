@@ -168,6 +168,8 @@ namespace DD.Collections.Generic.Tests {
             buffer.Push( 2 );
             buffer.Push( 3 );
 
+            Assert.That( buffer.GetEnumerator(), Is.Not.SameAs( buffer.GetEnumerator() ) );
+
             using ( var enumerator = buffer.GetEnumerator() ) {
                 for ( int i = 0; i < 2; i += 1 ) {
                     Assert.That(
