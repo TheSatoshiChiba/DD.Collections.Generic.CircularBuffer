@@ -102,6 +102,7 @@ namespace DD.Collections.Generic {
 
             head = ( buffer.Length + head + 1 ) % buffer.Length;
             if ( head == tail ) {
+                buffer[ head ] = default( TValue );
                 tail = ( buffer.Length + tail + 1 ) % buffer.Length;
             }
             version += 1;
@@ -120,11 +121,13 @@ namespace DD.Collections.Generic {
                 throw new InvalidOperationException( "Buffer is empty." );
             }
 
-            int index = tail;
+            var result = buffer[ tail ];
+
+            buffer[ tail ] = default( TValue );
             tail = ( buffer.Length + tail + 1 ) % buffer.Length;
 
             version += 1;
-            return buffer[ index ];
+            return result;
         }
 
         /// <summary>
