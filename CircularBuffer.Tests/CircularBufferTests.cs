@@ -23,13 +23,15 @@
 using NUnit.Framework;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DD.Collections.Generic.Tests {
     /// <summary>
     /// The <see cref="CircularBuffer{TValue}"/> tests.
     /// </summary>
     public class CircularBufferTests {
+        /// <summary>
+        /// Tests the constructors.
+        /// </summary>
         [Test]
         public void CreationTest() {
             var buffer1 = new CircularBuffer<int>();
@@ -49,6 +51,10 @@ namespace DD.Collections.Generic.Tests {
             Assert.That( buffer2.SyncRoot, Is.Not.SameAs( buffer1.SyncRoot ) );
         }
 
+        /// <summary>
+        /// Various <see cref="CircularBuffer{TValue}.Push(TValue)"/>
+        /// and <see cref="CircularBuffer{TValue}.Pop"/> tests.
+        /// </summary>
         [Test]
         public void PushPopTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -91,6 +97,11 @@ namespace DD.Collections.Generic.Tests {
                 .With.Message.EqualTo( "Buffer is empty." ) );
         }
 
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.Push(TValue)"/> and
+        /// <see cref="CircularBuffer{TValue}.Pop"/> with internal wrapping
+        /// of the buffer (value overwrite).
+        /// </summary>
         [Test]
         public void PushPopOverwriteTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -113,6 +124,53 @@ namespace DD.Collections.Generic.Tests {
                 .With.Message.EqualTo( "Buffer is empty." ) );
         }
 
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.Peek"/>.
+        /// </summary>
+        [Test]
+        public void PeekTest() {
+            var buffer = new CircularBuffer<int>( 3 );
+
+            Assert.That(
+                () => buffer.Peek(),
+                Throws.InvalidOperationException
+                .With.Message.EqualTo( "Buffer is empty." ) );
+
+            buffer.Push( 1 );
+            buffer.Push( 2 );
+            buffer.Push( 3 );
+
+            Assert.That( buffer.Peek(), Is.EqualTo( 1 ) );
+            Assert.That( buffer.Peek(), Is.EqualTo( buffer.Peek() ) );
+
+            buffer.Push( 4 );
+            buffer.Push( 5 );
+            buffer.Push( 6 );
+
+            Assert.That( buffer.Peek(), Is.EqualTo( 4 ) );
+            Assert.That( buffer.Peek(), Is.EqualTo( buffer.Peek() ) );
+
+            buffer.Pop();
+
+            Assert.That( buffer.Peek(), Is.EqualTo( 5 ) );
+            Assert.That( buffer.Peek(), Is.EqualTo( buffer.Peek() ) );
+
+            buffer.Pop();
+
+            Assert.That( buffer.Peek(), Is.EqualTo( 6 ) );
+            Assert.That( buffer.Peek(), Is.EqualTo( buffer.Peek() ) );
+
+            buffer.Pop();
+
+            Assert.That(
+                () => buffer.Peek(),
+                Throws.InvalidOperationException
+                .With.Message.EqualTo( "Buffer is empty." ) );
+        }
+
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.CopyTo(TValue[], int)"/>.
+        /// </summary>
         [Test]
         public void CopyToTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -175,6 +233,10 @@ namespace DD.Collections.Generic.Tests {
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
         }
 
+        /// <summary>
+        /// Tests the <see cref="CircularBuffer{TValue}.Enumerator"/> 
+        /// with an empty buffer.
+        /// </summary>
         [Test]
         public void EnumeratorEmptyTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -210,6 +272,9 @@ namespace DD.Collections.Generic.Tests {
             }
         }
 
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.Enumerator"/>.
+        /// </summary>
         [Test]
         public void EnumeratorTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -263,6 +328,10 @@ namespace DD.Collections.Generic.Tests {
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
         }
 
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.Enumerator"/> with
+        /// a wrapped buffer (overwritten values).
+        /// </summary>
         [Test]
         public void EnumeratorFragmentedTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -321,6 +390,10 @@ namespace DD.Collections.Generic.Tests {
             }
         }
 
+        /// <summary>
+        /// Tests the <see cref="CircularBuffer{TValue}.Enumerator"/> 
+        /// while the items in the buffer are changing.
+        /// </summary>
         [Test]
         public void EnumeratorChangingTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -372,6 +445,9 @@ namespace DD.Collections.Generic.Tests {
             }
         }
 
+        /// <summary>
+        /// Tests foreach iteration over the buffer.
+        /// </summary>
         [Test]
         public void IterationTest() {
             var buffer = new CircularBuffer<int>( 3 );
@@ -385,6 +461,31 @@ namespace DD.Collections.Generic.Tests {
                 foreach ( var value in buffer ) {
                     Assert.That( value, Is.EqualTo( x ) );
                     x += 1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests iteration over the buffer with calling
+        /// <see cref="CircularBuffer{TValue}.Peek"/>. This
+        /// makes sure that calls to peek actually don't change
+        /// the underlying buffer.
+        /// </summary>
+        [Test]
+        public void IterationPeekTest() {
+            var buffer = new CircularBuffer<int>( 3 );
+
+            buffer.Push( 1 );
+            buffer.Push( 2 );
+            buffer.Push( 3 );
+
+            for ( int i = 0; i < 2; i += 1 ) {
+                var x = 1;
+                foreach ( var value in buffer ) {
+                    Assert.That( value, Is.EqualTo( x ) );
+                    x += 1;
+
+                    Assert.That( buffer.Peek(), Is.EqualTo( 1 ) );
                 }
             }
         }

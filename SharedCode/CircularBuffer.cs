@@ -131,6 +131,25 @@ namespace DD.Collections.Generic {
         }
 
         /// <summary>
+        /// Returns the object at the beginning of the buffer without removing it.
+        /// </summary>
+        /// <remarks>
+        /// This method is similar to <see cref="Pop"/> but does not
+        /// remove the returned object from the buffer.
+        /// 
+        /// This method is an O(1) operation.
+        /// </remarks>
+        /// <returns>The object at the beginning of the buffer.</returns>
+        /// <exception cref="InvalidOperationException">The buffer is empty.</exception>
+        public TValue Peek() {
+            if ( tail == head ) {
+                throw new InvalidOperationException( "Buffer is empty." );
+            }
+
+            return buffer[ tail ];
+        }
+
+        /// <summary>
         /// Copies the buffer elements to an existing one-dimensional Array, 
         /// starting at the specified array offset.
         /// </summary>
