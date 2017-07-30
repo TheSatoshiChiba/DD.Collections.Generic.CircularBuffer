@@ -22,6 +22,8 @@
 
 using NUnit.Framework;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DD.Collections.Generic.Tests {
     /// <summary>
@@ -130,6 +132,20 @@ namespace DD.Collections.Generic.Tests {
                 Throws.ArgumentException
                 .With.Message.Contain( "No room in the destination array." ) );
 
+            Assert.That(
+                () => ( ( ICollection )buffer ).CopyTo( null, 0 ),
+                Throws.ArgumentNullException );
+
+            Assert.That(
+                () => ( ( ICollection )buffer ).CopyTo( destination, -1 ),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Message.Contain( "Offset must be greater or equal to 0." ) );
+
+            Assert.That(
+                () => ( ( ICollection )buffer ).CopyTo( destination, 4 ),
+                Throws.ArgumentException
+                .With.Message.Contain( "No room in the destination array." ) );
+
             buffer.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[ 3 ] ) );
 
@@ -141,16 +157,21 @@ namespace DD.Collections.Generic.Tests {
             Assert.That( destination, Is.EquivalentTo( new int[] { 1, 2, 3 } ) );
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
-            buffer.Pop();
-            buffer.Pop();
-            buffer.Pop();
-
             buffer.Push( 4 );
             buffer.Push( 5 );
             buffer.Push( 6 );
 
             buffer.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[] { 4, 5, 6 } ) );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
+
+            // Interface test
+            buffer.Push( 7 );
+            buffer.Push( 8 );
+            buffer.Push( 9 );
+
+            ( ( ICollection )buffer ).CopyTo( destination, 0 );
+            Assert.That( destination, Is.EquivalentTo( new int[] { 7, 8, 9 } ) );
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
         }
 
@@ -161,14 +182,24 @@ namespace DD.Collections.Generic.Tests {
             using ( var enumerator = buffer.GetEnumerator() ) {
                 for ( int i = 0; i < 2; i += 1 ) {
                     Assert.That(
-                    () => enumerator.Current,
-                    Throws.InvalidOperationException
-                    .With.Message.EqualTo( "Enumeration not started." ) );
+                        () => enumerator.Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration not started." ) );
+
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration not started." ) );
 
                     Assert.That( enumerator.MoveNext(), Is.False );
 
                     Assert.That(
                         () => enumerator.Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration finished." ) );
+
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
                         Throws.InvalidOperationException
                         .With.Message.EqualTo( "Enumeration finished." ) );
 
@@ -188,6 +219,7 @@ namespace DD.Collections.Generic.Tests {
             buffer.Push( 3 );
 
             Assert.That( buffer.GetEnumerator(), Is.Not.SameAs( buffer.GetEnumerator() ) );
+            Assert.That( ( ( IEnumerable )buffer ).GetEnumerator(), Is.EqualTo( buffer.GetEnumerator() ) );
 
             using ( var enumerator = buffer.GetEnumerator() ) {
                 for ( int i = 0; i < 2; i += 1 ) {
@@ -196,16 +228,32 @@ namespace DD.Collections.Generic.Tests {
                         Throws.InvalidOperationException
                         .With.Message.EqualTo( "Enumeration not started." ) );
 
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration not started." ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 1 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 2 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 3 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.False );
 
                     Assert.That(
                         () => enumerator.Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration finished." ) );
+
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
                         Throws.InvalidOperationException
                         .With.Message.EqualTo( "Enumeration finished." ) );
 
@@ -239,16 +287,32 @@ namespace DD.Collections.Generic.Tests {
                         Throws.InvalidOperationException
                         .With.Message.EqualTo( "Enumeration not started." ) );
 
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration not started." ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 3 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 4 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.True );
                     Assert.That( enumerator.Current, Is.EqualTo( 5 ) );
+                    Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
+
                     Assert.That( enumerator.MoveNext(), Is.False );
 
                     Assert.That(
                         () => enumerator.Current,
+                        Throws.InvalidOperationException
+                        .With.Message.EqualTo( "Enumeration finished." ) );
+
+                    Assert.That(
+                        () => ( ( IEnumerator )enumerator ).Current,
                         Throws.InvalidOperationException
                         .With.Message.EqualTo( "Enumeration finished." ) );
 
@@ -283,6 +347,7 @@ namespace DD.Collections.Generic.Tests {
                         "Buffer changed during enumeration." ) );
 
                 Assert.That( enumerator.Current, Is.EqualTo( 1 ) );
+                Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
             }
 
             using ( var enumerator = buffer.GetEnumerator() ) {
@@ -303,6 +368,7 @@ namespace DD.Collections.Generic.Tests {
                         "Buffer changed during enumeration." ) );
 
                 Assert.That( enumerator.Current, Is.EqualTo( 2 ) );
+                Assert.That( ( ( IEnumerator )enumerator ).Current, Is.EqualTo( enumerator.Current ) );
             }
         }
 
