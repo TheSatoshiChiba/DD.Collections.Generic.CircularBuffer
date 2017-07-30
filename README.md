@@ -8,7 +8,7 @@ The implementation is tested via [NUnit](http://nunit.org). The tests can be fou
 
 ## Usage
 
-The CircularBuffer class is located within the 'DD.Collections.Generic' namespace. To create a new instance you simply have to call the constructor:
+The CircularBuffer class is located within the `DD.Collections.Generic` namespace. To create a new instance you simply have to call the constructor:
 
 ```cs
 // Creates a buffer with room for 1023 items
@@ -30,7 +30,7 @@ var b = defined_capacity_instance.Pop(); // b == 2
 var c = defined_capacity_instance.Pop(); // c == 3
 ```
 
-You can also enumerate over all items within the buffer as the circular buffer inherits `IReadOnlyCollection<T>` which in return inherits `IEnumerable<T>`. (**Iterating over the buffer does not consume its items!**):
+You can also enumerate over all items within the buffer as the circular buffer inherits `IReadOnlyCollection<T>` which in return inherits `IEnumerable<T>`. (**Iterating over the buffer does not consume its items**):
 
 ```cs
 defined_capacity_instance.Push( 1 );
