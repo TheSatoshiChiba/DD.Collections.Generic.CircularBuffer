@@ -2,14 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <AssemblyName>CircularBuffer</AssemblyName>
+    <AssemblyName>DD.Collections.Generic.CircularBuffer</AssemblyName>
     <RootNamespace>DD.Collections.Generic</RootNamespace>
     <Authors>Daniel Drywa</Authors>
     <PackageId>DD.Collections.Generic.CircularBuffer</PackageId>
     <Company />
     <Product>DD.Collections.Generic</Product>
-    <Description />
+    <Description>A single-file implementation of a generic fixed-size Circular Buffer data structure for the .NET Standard 1.6.</Description>
     <Copyright>Copyright(c) 2017 Daniel Drywa</Copyright>
+    <PackageLicenseUrl>https://github.com/TheSatoshiChiba/DD.Collections.Generic.CircularBuffer/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/TheSatoshiChiba/DD.Collections.Generic.CircularBuffer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TheSatoshiChiba/DD.Collections.Generic.CircularBuffer</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>buffer, fixed-size, net-standard, csharp, circular-buffer, collection, generic, generic-collections</PackageTags>
   </PropertyGroup>
 
   <Import Project="..\SharedCode\SharedCode.projitems" Label="Shared" />

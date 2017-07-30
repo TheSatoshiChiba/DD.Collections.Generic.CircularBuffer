@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "CircularBuffer.Tests" )]
-[assembly: AssemblyDescription( "" )]
+[assembly: AssemblyTitle( "DD.Collections.Generic.CircularBuffer.Tests" )]
+[assembly: AssemblyDescription( "NUnit tests for the DD.Collections.Generic.CircularBuffer class" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "" )]
-[assembly: AssemblyProduct( "nunit.tests" )]
-[assembly: AssemblyCopyright( "Copyright © 2017" )]
+[assembly: AssemblyCompany( "Daniel Drywa" )]
+[assembly: AssemblyProduct( "DD.Collections.Generic" )]
+[assembly: AssemblyCopyright( "Copyright © 2017 Daniel Drywa" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
