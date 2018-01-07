@@ -1,17 +1,17 @@
 ﻿// The MIT License(MIT)
-// 
-// Copyright(c) 2017 Daniel Drywa
-// 
+//
+// Copyright(c) 2017, 2018 Daniel Drywa
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,13 +48,13 @@ namespace DD.Collections.Generic {
         public int Count => ( buffer.Length + head - tail ) % buffer.Length;
 
         /// <summary>
-        /// Returns a value indicating whether access to 
+        /// Returns a value indicating whether access to
         /// the buffer is synchronized (thread safe).
         /// </summary>
         public bool IsSynchronized => false;
 
         /// <summary>
-        /// Returns an object that can be used to synchronize 
+        /// Returns an object that can be used to synchronize
         /// access to the buffer.
         /// </summary>
         public object SyncRoot => syncRoot;
@@ -68,7 +68,7 @@ namespace DD.Collections.Generic {
         private int version;
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="CircularBuffer{TValue}"/> 
+        /// Initialises a new instance of the <see cref="CircularBuffer{TValue}"/>
         /// class that is empty and has the default capacity.
         /// </summary>
         public CircularBuffer()
@@ -87,14 +87,14 @@ namespace DD.Collections.Generic {
         /// Adds an object to the end of the buffer.
         /// </summary>
         /// <remarks>
-        /// If <see cref="Count"/> already equals the <see cref="Capacity"/>, 
-        /// the object at the beginning of the buffer is overwritten, 
+        /// If <see cref="Count"/> already equals the <see cref="Capacity"/>,
+        /// the object at the beginning of the buffer is overwritten,
         /// and the following element will be the new starting point of the buffer.
-        /// 
+        ///
         /// This method is an O(1) operation.
         /// </remarks>
         /// <param name="item">
-        /// The object to add to the buffer. 
+        /// The object to add to the buffer.
         /// The value can be null for reference types.
         /// </param>
         public void Push( TValue item ) {
@@ -136,7 +136,7 @@ namespace DD.Collections.Generic {
         /// <remarks>
         /// This method is similar to <see cref="Pop"/> but does not
         /// remove the returned object from the buffer.
-        /// 
+        ///
         /// This method is an O(1) operation.
         /// </remarks>
         /// <returns>The object at the beginning of the buffer.</returns>
@@ -150,12 +150,12 @@ namespace DD.Collections.Generic {
         }
 
         /// <summary>
-        /// Copies the buffer elements to an existing one-dimensional Array, 
+        /// Copies the buffer elements to an existing one-dimensional Array,
         /// starting at the specified array offset.
         /// </summary>
         /// <param name="destination">
-        /// The one-dimensional Array that is the destination of the 
-        /// elements copied from the buffer. The Array must have 
+        /// The one-dimensional Array that is the destination of the
+        /// elements copied from the buffer. The Array must have
         /// zero-based indexing.
         /// </param>
         /// <param name="offset">The zero-based index in array at which copying begins.</param>
@@ -207,12 +207,12 @@ namespace DD.Collections.Generic {
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
-        /// Copies the buffer elements to an existing one-dimensional Array, 
+        /// Copies the buffer elements to an existing one-dimensional Array,
         /// starting at the specified array offset.
         /// </summary>
         /// <param name="destination">
-        /// The one-dimensional Array that is the destination of the 
-        /// elements copied from the buffer. The Array must have 
+        /// The one-dimensional Array that is the destination of the
+        /// elements copied from the buffer. The Array must have
         /// zero-based indexing.
         /// </param>
         /// <param name="offset">The zero-based index in array at which copying begins.</param>
@@ -270,7 +270,7 @@ namespace DD.Collections.Generic {
             /// <exception cref="InvalidOperationException">The buffer changed during enumeration.</exception>
             public bool MoveNext() {
                 if ( version != instance.version ) {
-                    throw new InvalidOperationException( 
+                    throw new InvalidOperationException(
                         "Buffer changed during enumeration." );
                 }
 
@@ -293,7 +293,7 @@ namespace DD.Collections.Generic {
             }
 
             /// <summary>
-            /// Sets the enumerator to its initial position, 
+            /// Sets the enumerator to its initial position,
             /// which is before the first element in the buffer.
             /// </summary>
             /// <exception cref="InvalidOperationException">The buffer changed during enumeration.</exception>
