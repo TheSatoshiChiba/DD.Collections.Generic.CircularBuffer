@@ -54,6 +54,7 @@ namespace DD.Collections.Generic {
         /// <remarks>
         /// Deprecated. Can be accessed via the <see cref="ICollection"/> interface.
         /// </remarks>
+        [Obsolete( "Use ICollection.IsSynchronized instead.", false )]
         public bool IsSynchronized => false;
 
         /// <summary>
@@ -69,6 +70,7 @@ namespace DD.Collections.Generic {
         /// <remarks>
         /// Deprecated. Can be accessed via the <see cref="ICollection"/> interface.
         /// </remarks>
+        [Obsolete( "Use ICollection.SyncRoot instead.", false )]
         public object SyncRoot => syncRoot;
 
         /// <summary>
