@@ -23,6 +23,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DD.Collections.Generic.Tests {
     /// <summary>
@@ -178,6 +179,39 @@ namespace DD.Collections.Generic.Tests {
                 () => buffer.Peek(),
                 Throws.InvalidOperationException
                 .With.Message.EqualTo( "Buffer is empty." ) );
+        }
+
+        /// <summary>
+        /// Tests <see cref="CircularBuffer{TValue}.Contains(TValue)"/>.
+        /// </summary>
+        [Test]
+        public void ContainsTest() {
+            var buffer = new CircularBuffer<int>( 3 );
+            var excluded = new List<int> { -1 };
+            var included = new List<int>();
+
+            for ( int i = 0; i < 15; i += 1 ) {
+                foreach ( var val in excluded ) {
+                    Assert.That( buffer.Contains( val ), Is.False );
+                }
+                foreach ( var val in included ) {
+                    Assert.That( buffer.Contains( val ), Is.True );
+                }
+
+                if ( i >= 12 ) {
+                    excluded.Add( buffer.Pop() );
+                    included.RemoveAt( 0 );
+                } else {
+                    buffer.Push( i );
+                    included.Add( i );
+                    if ( i > 0 && included.Count % 4 == 0 ) {
+                        excluded.Add( included[ 0 ] );
+                        included.RemoveAt( 0 );
+                    }
+                }
+            }
+
+            Assert.That( buffer.Count, Is.EqualTo( 0 ) );
         }
 
         /// <summary>

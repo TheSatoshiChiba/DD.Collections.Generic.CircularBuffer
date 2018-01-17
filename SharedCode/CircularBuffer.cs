@@ -171,6 +171,40 @@ namespace DD.Collections.Generic {
         }
 
         /// <summary>
+        /// Determines whether an element is in the <see cref="CircularBuffer{TValue}"/>.
+        /// </summary>
+        /// <param name="value">
+        /// The object to locate in the <see cref="CircularBuffer{TValue}"/>.
+        /// The value can be null for reference types.
+        /// </param>
+        /// <returns>
+        /// True if item is found in the <see cref="CircularBuffer{TValue}"/>.
+        /// Otherwise false.
+        /// </returns>
+        /// <remarks>
+        /// This method determines equality using the default equality comparer
+        /// <see cref="EqualityComparer{T}.Default"/> for <see cref="TValue"/>.
+        /// 
+        /// This method is an O(n) operation, where n is <see cref="Count"/>.
+        /// </remarks>
+        public bool Contains( TValue value ) {
+            if ( tail == head ) {
+                return false;
+            }
+
+            var index = tail;
+            var comparer = EqualityComparer<TValue>.Default;
+            while ( index != head ) {
+                if ( comparer.Equals( buffer[ index ], value ) ) {
+                    return true;
+                }
+                index = ( buffer.Length + index + 1 ) % buffer.Length;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Copies the buffer elements to an existing one-dimensional Array,
         /// starting at the specified array offset.
         /// </summary>
