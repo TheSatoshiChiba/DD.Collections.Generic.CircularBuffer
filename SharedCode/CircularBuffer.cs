@@ -79,7 +79,8 @@ namespace DD.Collections.Generic {
         /// </summary>
         object ICollection.SyncRoot => syncRoot;
 
-        private readonly object syncRoot = new object();
+        private readonly Lazy<object> syncRoot
+            = new Lazy<object>( () => new object() );
 
         private readonly TValue[] buffer;
 
