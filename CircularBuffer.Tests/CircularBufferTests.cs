@@ -220,6 +220,7 @@ namespace DD.Collections.Generic.Tests {
         [Test]
         public void CopyToTest() {
             var buffer = new CircularBuffer<int>( 3 );
+            var collection = ( ICollection )buffer;
             var destination = new int[] { 0, 0, 0 };
 
             Assert.That(
@@ -227,39 +228,71 @@ namespace DD.Collections.Generic.Tests {
                 Throws.ArgumentNullException );
 
             Assert.That(
-                () => buffer.CopyTo( destination, -1 ),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Message.Contain( "Offset must be greater or equal to 0." ) );
-
-            Assert.That(
-                () => buffer.CopyTo( destination, 4 ),
-                Throws.ArgumentException
-                .With.Message.Contain( "No room in the destination array." ) );
-
-            Assert.That(
-                () => ( ( ICollection )buffer ).CopyTo( null, 0 ),
+                () => collection.CopyTo( null, 0 ),
                 Throws.ArgumentNullException );
 
             Assert.That(
-                () => ( ( ICollection )buffer ).CopyTo( destination, -1 ),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Message.Contain( "Offset must be greater or equal to 0." ) );
+                () => collection.CopyTo( new int[ 5, 5 ], 0 ),
+                Throws.ArgumentException
+                .With.Message.Contain( "Multidimensional Arrays are not supported." ) );
 
             Assert.That(
-                () => ( ( ICollection )buffer ).CopyTo( destination, 4 ),
+                () => collection.CopyTo( 
+                    Array.CreateInstance( typeof( int ), new int[] { 2 }, new int[] { 5 } ), 
+                    0 ),
                 Throws.ArgumentException
-                .With.Message.Contain( "No room in the destination array." ) );
+                .With.Message.Contain( "Array has non-zero-based indexing." ) );
+
+            Assert.That(
+                () => buffer.CopyTo( destination, -1 ),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Message.Contain( "Offset is negative or larger than the destination." ) );
+
+            Assert.That(
+                () => collection.CopyTo( destination, -1 ),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Message.Contain( "Index is negative or larger than the destination." ) );
+
+            Assert.That(
+                () => buffer.CopyTo( destination, 4 ),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Message.Contain( "Offset is negative or larger than the destination." ) );
+
+            Assert.That(
+                () => collection.CopyTo( destination, 4 ),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Message.Contain( "Index is negative or larger than the destination." ) );
 
             buffer.CopyTo( destination, 0 );
+            Assert.That( destination, Is.EquivalentTo( new int[ 3 ] ) );
+
+            collection.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[ 3 ] ) );
 
             buffer.Push( 1 );
             buffer.Push( 2 );
             buffer.Push( 3 );
 
+            Assert.That(
+                () => buffer.CopyTo( destination, 2 ),
+                Throws.ArgumentException
+                .With.Message.Contain( "No room in the destination array." ) );
+            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
+
+            Assert.That(
+                () => collection.CopyTo( destination, 2 ),
+                Throws.ArgumentException
+                .With.Message.Contain( "No room in the destination array." ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
+
             buffer.CopyTo( destination, 0 );
             Assert.That( destination, Is.EquivalentTo( new int[] { 1, 2, 3 } ) );
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
+
+            destination = new int[] { 0, 0, 0 };
+            collection.CopyTo( destination, 0 );
+            Assert.That( destination, Is.EquivalentTo( new int[] { 1, 2, 3 } ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
 
             buffer.Push( 4 );
             buffer.Push( 5 );
@@ -269,14 +302,30 @@ namespace DD.Collections.Generic.Tests {
             Assert.That( destination, Is.EquivalentTo( new int[] { 4, 5, 6 } ) );
             Assert.That( buffer.Count, Is.EqualTo( 3 ) );
 
-            // Interface test
-            buffer.Push( 7 );
-            buffer.Push( 8 );
-            buffer.Push( 9 );
+            destination = new int[] { 0, 0, 0 };
+            collection.CopyTo( destination, 0 );
+            Assert.That( destination, Is.EquivalentTo( new int[] { 4, 5, 6 } ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
 
-            ( ( ICollection )buffer ).CopyTo( destination, 0 );
-            Assert.That( destination, Is.EquivalentTo( new int[] { 7, 8, 9 } ) );
-            Assert.That( buffer.Count, Is.EqualTo( 3 ) );
+            var objects = new object[] { null, null, null };
+            collection.CopyTo( destination, 0 );
+            Assert.That( destination, Is.EquivalentTo( new int[] { 4, 5, 6 } ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
+
+            var doubles = new double[] { 0.0, 0.0, 0.0 };
+            Assert.That(
+                () => collection.CopyTo( doubles, 0 ),
+                Throws.ArgumentException
+                .With.Message.Contain( "Invalid array type." ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
+
+            var strings = new string[] { "", "", "" };
+            objects = strings;
+            Assert.That(
+                () => collection.CopyTo( objects, 0 ),
+                Throws.ArgumentException
+                .With.Message.Contain( $"Invalid array type. Expected type {typeof( int )}." ) );
+            Assert.That( collection.Count, Is.EqualTo( 3 ) );
         }
 
         /// <summary>

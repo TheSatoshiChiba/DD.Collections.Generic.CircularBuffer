@@ -94,6 +94,7 @@ namespace DD.Collections.Generic {
         /// </summary>
         public CircularBuffer()
             : this( DEFAULT_CAPACITY ) {
+            // no-op.
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace DD.Collections.Generic {
 
             head = ( buffer.Length + head + 1 ) % buffer.Length;
             if ( head == tail ) {
-                buffer[ head ] = default( TValue );
+                buffer[ head ] = default;
                 tail = ( buffer.Length + tail + 1 ) % buffer.Length;
             }
             version += 1;
@@ -144,7 +145,7 @@ namespace DD.Collections.Generic {
 
             var result = buffer[ tail ];
 
-            buffer[ tail ] = default( TValue );
+            buffer[ tail ] = default;
             tail = ( buffer.Length + tail + 1 ) % buffer.Length;
 
             version += 1;
@@ -215,38 +216,26 @@ namespace DD.Collections.Generic {
         /// </param>
         /// <param name="offset">The zero-based index in array at which copying begins.</param>
         /// <exception cref="ArgumentNullException">The destination array is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The given offset is negative.</exception>
-        /// <exception cref="ArgumentException">There destination array is too small to hold a copy of all elements within the buffer.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The given offset is negative or bigger than the actual array..</exception>
+        /// <exception cref="ArgumentException">The destination array is too small to hold a copy of all elements within the buffer.</exception>
         public void CopyTo( TValue[] destination, int offset ) {
             if ( destination == null ) {
                 throw new ArgumentNullException( nameof( destination ) );
             }
-            if ( offset < 0 ) {
+            if ( offset < 0 || offset > destination.Length ) {
                 throw new ArgumentOutOfRangeException(
                     nameof( offset ),
-                    "Offset must be greater or equal to 0." );
+                    "Offset is negative or larger than the destination." );
             }
 
-            int length = Count;
-            if ( offset + length > destination.Length
-                || offset + length < 0 ) {
-
+            var length = Count;
+            if ( destination.Length - offset < Count ) {
                 throw new ArgumentException(
                     "No room in the destination array.",
                     nameof( destination ) );
             }
 
-            if ( head == tail ) {
-                return;
-            }
-
-            if ( head > tail ) {
-                Array.Copy( buffer, tail, destination, offset, length );
-            } else {
-                length = buffer.Length - tail;
-                Array.Copy( buffer, tail, destination, offset, length );
-                Array.Copy( buffer, 0, destination, offset + length, head );
-            }
+            CopyBuffer( destination, offset );
         }
 
         /// <summary>
@@ -271,8 +260,82 @@ namespace DD.Collections.Generic {
         /// zero-based indexing.
         /// </param>
         /// <param name="offset">The zero-based index in array at which copying begins.</param>
-        void ICollection.CopyTo( Array array, int index )
-            => CopyTo( ( TValue[] )array, index );
+        /// <exception cref="ArgumentNullException">The destination array is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The given offset is negative or bigger than the actual array..</exception>
+        /// <exception cref="ArgumentException">
+        /// The destination array is eihter too small to hold a copy of all elements within the buffer,
+        /// multidimensional, has non-zero-based indexing, or an invalid type.
+        /// </exception>
+        void ICollection.CopyTo( Array array, int index ) {
+            if ( array == null ) {
+                throw new ArgumentNullException( nameof( array ) );
+            }
+            if ( array.Rank != 1 ) {
+                throw new ArgumentException( 
+                    "Multidimensional Arrays are not supported.", 
+                    nameof( array ) );
+            }
+            if ( array.GetLowerBound( 0 ) != 0 ) {
+                throw new ArgumentException( 
+                    "Array has non-zero-based indexing.", 
+                    nameof( array ) );
+            }
+            if ( index < 0 || index > array.Length ) {
+                throw new ArgumentOutOfRangeException( 
+                    nameof( index ), 
+                    "Index is negative or larger than the destination." );
+            }
+
+            var length = Count;
+            if ( array.Length - index < length ) {
+                throw new ArgumentException(
+                    "No room in the destination array.", 
+                    nameof( array ) );
+            }
+
+            if ( array is TValue[] values ) {
+                CopyTo( values, index );
+
+            } else if ( array is object[] objects ) {
+                try {
+                    CopyBuffer( objects, index );
+                } catch ( ArrayTypeMismatchException ) {
+                    throw new ArgumentException(
+                        $"Invalid array type. Expected type {typeof( TValue )}.",
+                        nameof( array ) );
+                }
+
+            } else {
+                throw new ArgumentException( 
+                    "Invalid array type.", 
+                    nameof( array ) );
+            }
+        }
+
+        /// <summary>
+        /// Performs a copy of the internal buffer to the given destination.
+        /// </summary>
+        /// <remarks>
+        /// No error checks are performed in this method. It is up to
+        /// the calling method to provide valid arguments.
+        /// 
+        /// If there are no elements in the buffer then no copy operation will take place.
+        /// </remarks>
+        /// <param name="destination">The destination array.</param>
+        /// <param name="offset">The zero-based index in array at which copying begins.</param>
+        private void CopyBuffer( Array destination, int offset ) {
+            if ( head == tail ) {
+                return;
+            }
+
+            if ( head > tail ) {
+                Array.Copy( buffer, tail, destination, offset, Count );
+            } else {
+                var length = buffer.Length - tail;
+                Array.Copy( buffer, tail, destination, offset, length );
+                Array.Copy( buffer, 0, destination, offset + length, head );
+            }
+        }
 
         /// <summary>
         /// The CircularBuffer enumerator that iterates through the buffer.
@@ -311,7 +374,7 @@ namespace DD.Collections.Generic {
                 this.instance = instance;
 
                 index = -1;
-                current = default( TValue );
+                current = default;
                 version = instance.version;
             }
 
@@ -339,7 +402,7 @@ namespace DD.Collections.Generic {
 
                 if ( index == instance.head ) {
                     index = -2;
-                    current = default( TValue );
+                    current = default;
                     return false;
                 }
 
@@ -359,7 +422,7 @@ namespace DD.Collections.Generic {
                 }
 
                 index = -1;
-                current = default( TValue );
+                current = default;
             }
 
             /// <summary>
@@ -367,7 +430,7 @@ namespace DD.Collections.Generic {
             /// </summary>
             public void Dispose() {
                 index = -2;
-                current = default( TValue );
+                current = default;
             }
 
             /// <summary>
