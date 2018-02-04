@@ -1,6 +1,6 @@
 # DD.Collections.Generic.CircularBuffer
 
-This is a single-file implementation of a generic fixed-size [Circular Buffer](https://en.wikipedia.org/wiki/Circular_buffer) data structure for the .NET Standard 1.6.
+This is a single-file implementation of a generic fixed-size [Circular Buffer](https://en.wikipedia.org/wiki/Circular_buffer) data structure for the .NET Standard 1.6 and C# 7.2.
 
 The implementation itself is located within a single *cs* [file](SharedCode/CircularBuffer.cs) for easy inclusion in your projects.
 
