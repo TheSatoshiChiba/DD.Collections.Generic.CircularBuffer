@@ -5,6 +5,12 @@
     <AssemblyName>DD.Collections.Generic.CircularBuffer.Tests</AssemblyName>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
 
   <Import Project="..\SharedCode\SharedCode.projitems" Label="Shared" />
 

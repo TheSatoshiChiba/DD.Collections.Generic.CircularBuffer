@@ -1,5 +1,6 @@
 .vs
 .axoCover
+*.csproj.user
 [Bb]in/
 [Oo]bj/
 [Pp]ackages/
