@@ -51,27 +51,7 @@ namespace DD.Collections.Generic {
         /// Returns a value indicating whether access to
         /// the buffer is synchronized (thread safe).
         /// </summary>
-        /// <remarks>
-        /// Deprecated. Can be accessed via the <see cref="ICollection"/> interface.
-        /// </remarks>
-        [Obsolete( "Use ICollection.IsSynchronized instead.", false )]
-        public bool IsSynchronized => false;
-
-        /// <summary>
-        /// Returns a value indicating whether access to
-        /// the buffer is synchronized (thread safe).
-        /// </summary>
         bool ICollection.IsSynchronized => false;
-
-        /// <summary>
-        /// Returns an object that can be used to synchronize
-        /// access to the buffer.
-        /// </summary>
-        /// <remarks>
-        /// Deprecated. Can be accessed via the <see cref="ICollection"/> interface.
-        /// </remarks>
-        [Obsolete( "Use ICollection.SyncRoot instead.", false )]
-        public object SyncRoot => syncRoot;
 
         /// <summary>
         /// Returns an object that can be used to synchronize

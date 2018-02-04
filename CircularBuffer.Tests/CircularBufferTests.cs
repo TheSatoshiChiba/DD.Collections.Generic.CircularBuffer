@@ -39,29 +39,23 @@ namespace DD.Collections.Generic.Tests {
 
             Assert.That( buffer1.Capacity, Is.EqualTo( 1023 ) );
             Assert.That( buffer1.Count, Is.EqualTo( 0 ) );
-            Assert.That( buffer1.IsSynchronized, Is.False );
-            Assert.That( buffer1.SyncRoot, Is.Not.Null );
-            Assert.That( buffer1.SyncRoot, Is.SameAs( buffer1.SyncRoot ) );
 
             var collection1 = ( ICollection )buffer1;
 
             Assert.That( collection1.IsSynchronized, Is.False );
             Assert.That( collection1.SyncRoot, Is.Not.Null );
-            Assert.That( collection1.SyncRoot, Is.SameAs( buffer1.SyncRoot ) );
+            Assert.That( collection1.SyncRoot, Is.SameAs( collection1.SyncRoot ) );
 
             var buffer2 = new CircularBuffer<int>( 42 );
 
             Assert.That( buffer2.Capacity, Is.EqualTo( 42 ) );
             Assert.That( buffer2.Count, Is.EqualTo( 0 ) );
-            Assert.That( buffer2.IsSynchronized, Is.False );
-            Assert.That( buffer2.SyncRoot, Is.Not.Null );
-            Assert.That( buffer2.SyncRoot, Is.Not.SameAs( buffer1.SyncRoot ) );
 
             var collection2 = ( ICollection )buffer2;
 
             Assert.That( collection2.IsSynchronized, Is.False );
             Assert.That( collection2.SyncRoot, Is.Not.Null );
-            Assert.That( collection2.SyncRoot, Is.Not.SameAs( buffer1.SyncRoot ) );
+            Assert.That( collection2.SyncRoot, Is.Not.SameAs( collection1.SyncRoot ) );
         }
 
         /// <summary>
